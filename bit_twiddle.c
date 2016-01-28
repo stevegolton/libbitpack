@@ -12,7 +12,7 @@ union test
 	uint8_t bytes[4];
 };
 
-#define mMASK(x)					( ( 0x1ULL << ( x ) ) )
+#define mMASK(x)					( ( x < 64 )?( ( 0x1ULL << x ) - 1 ):0xFFFFFFFFFFFFFFFFULL )
 
 static inline eByteOrder_t GetSystemByteOrder( void );
 
@@ -20,50 +20,70 @@ static inline eByteOrder_t GetSystemByteOrder( void );
  * Pulls out a 64-bit unsigned integer from an array of bytes with a given byte
  * order. The result is copied into the passed 64 bit pointer.
  *
+ * @param[in]	Byte array to use.
+ * @param[in]	offset_bits		Offset from the START of the array i.e. the
+ * 								least significant bit of element [0] of the
+ * 								byte array.
+ * @param[in]	width_bits		Width if the parameter in bits.
+ * @param[in]	byte_order		The byte order LSB or MSB first.
+ * @param[out]	qwDest			Destination int.
+ *
  * @return		Error code.
  */
 int UnpackUint64( const uint8_t * const pabyData,
-				  const size_t iOffsetBits,
-				  const size_t iWidthBits,
+				  const size_t offset_bits,
+				  const size_t width_bits,
 				  const eByteOrder_t eByteOrder,
 				  uint64_t * qwDest )
 {
 	uint64_t qwTemp = 0;
 	int iIdx;
+	int offset = 0;
+	int bitoffset = 0;
+	int byteoffset = 0;
+	int widthinbytes = ( ( width_bits - 1 ) / 8 ) + 1;
 
 	/* Cant do anything more than a uint64 */
-	if ( iWidthBits > ( 8 * sizeof( uint64_t ) ) )
+	if ( width_bits > ( 8 * sizeof( uint64_t ) ) )
 		return -1;
 
-	/* Independent of the host architecture we will copy out the array into a uint64.
-	 * For this we shall treat the first byte in the array (index [0]) as the
-	 * least significant part of the int.
-	 * This means that a right shift equates to shifting towards the start of
-	 * the array.
-	 * TODO this will not work for non byte boundaries.
-	 */
-	for ( iIdx = 0; iIdx < iWidthBits/8; iIdx++ )
+	if ( eByteOrder == eByteOrder_LSBFirst )
 	{
-		//qwTemp |= ( (uint64_t)pabyData[ ( iWidthBits / 8 - 1) - iIdx] ) << ( 8 * iIdx );
-		qwTemp |= ( (uint64_t)pabyData[ iIdx ] ) << ( 8 * iIdx );
-	}
+		/* Little endian */
+		for ( iIdx = offset_bits; iIdx < ( offset_bits + width_bits ); iIdx++ )
+		{
+			int targetByte = iIdx / 8;
+			int targetBit = iIdx % 8;
 
-	if ( eByteOrder == GetSystemByteOrder() )
-	{
-		/* Same byte order - shift and mask verbatim */
-		qwTemp >>= iOffsetBits;
-		qwTemp &= mMASK( iWidthBits );
-
-		printf("%d, %llx\n", iWidthBits, mMASK( iWidthBits + 1 ));
+			/* Work out which byte we want */
+			qwTemp |= ( (uint64_t)( pabyData[targetByte] >> targetBit ) & 0x1 ) << offset++;
+		}
 
 		*qwDest = qwTemp;
 	}
 	else
 	{
-		/* Different byte order - need to byte swap */
-		*qwDest = qwTemp;
+		/* Big endian */
+		for ( iIdx = offset_bits; iIdx < ( offset_bits + width_bits ); iIdx++ )
+		{
+			int targetByte = iIdx / 8;
+			int targetBit = iIdx % 8;
+			uint8_t byte;
 
-		/* TODO can't do different byte order */
+			/* Work out which byte we want */
+			byte |= ( ( pabyData[targetByte] >> targetBit ) & 0x1 ) << bitoffset++;
+
+			if ( 8 == bitoffset )
+			{
+				/* We have completed a byte to move it up into place */
+				qwTemp |= ((uint64_t)byte) << (8*(widthinbytes - (++byteoffset)));
+
+				bitoffset = 0;
+				byte = 0;
+			}
+		}
+
+		*qwDest = qwTemp;
 	}
 
 	return 0;
@@ -85,22 +105,7 @@ int PackUint64( const uint8_t * const pabyData,
 	if ( ( iOffsetBits + iWidthBits ) > 64 )
 		return -1;
 
-	if ( eByteOrder == GetSystemByteOrder() )
-	{
-		/* Same byte order - copy out verbatim */
-		qwTemp = *((const uint64_t*)pabyData);
-
-		/* Clear the existing bits we are about to copy in */
-		qwTemp &= ~mMASK( iWidthBits );
-		qwTemp |= ( qwSrc & mMASK( iWidthBits ) ) << iOffsetBits;
-	}
-	else
-	{
-		/* Different byte order - need to byte swap */
-		return -1;
-	}
-
-	return 0;
+	return -1;
 }
 
 /* ************************************************************************** */
@@ -112,7 +117,7 @@ static inline eByteOrder_t GetSystemByteOrder( void )
 
 	if ( testval.bytes[0] == 0x1 )
 	{
-		return eByteOrder_MSBLast;
+		return eByteOrder_LSBFirst;
 	}
 	else
 	{

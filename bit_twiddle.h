@@ -4,7 +4,7 @@
 typedef enum
 {
 	eByteOrder_MSBFirst,	/* Motorola */
-	eByteOrder_MSBLast		/* Intel */
+	eByteOrder_LSBFirst		/* Intel */
 
 } eByteOrder_t;
 
