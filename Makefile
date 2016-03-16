@@ -7,13 +7,13 @@ LDFLAGS =
 LIBRARIES = -lcmocka
 SOURCES = main.c bit_twiddle.c
 OBJECTS = $(SOURCES:.c=.o)
-EXECUTABLE = testme
+EXECUTABLE = testme.out
 
 
 all: $(SOURCES) $(EXECUTABLE)
 
 test: all
-	./testme
+	./$(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(LIBRARIES)

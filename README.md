@@ -16,7 +16,8 @@ How it works:
 This library was originally designed for packing and parsing CAN messages to and from weird automotive devices. It's not meant to be fast or efficient, just flexible.
 
 ## Build & test instructions
-(Requires cmocka libraries to be installed) - make && make test
+ - install cmocka `# apt-get install libcmocka-dev` (tested on Ubuntu 14.04)
+ - make && make test
 
 ## TODO
  - Write pretty much all the code!

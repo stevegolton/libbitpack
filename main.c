@@ -19,16 +19,16 @@ static void test_unpack_uint32_le_unaligned( void **state );
 
 int main(void)
 {
-	const struct CMUnitTest tests[] =
+	const struct UnitTest tests[] =
 	{
-		cmocka_unit_test( test_unpack_uint64_be_aligned ),
-		cmocka_unit_test( test_unpack_uint64_le_aligned ),
-		cmocka_unit_test( test_unpack_uint32_be_byaligned ),
-		cmocka_unit_test( test_unpack_uint32_le_byaligned ),
-		cmocka_unit_test( test_unpack_uint32_be_unaligned ),
-		cmocka_unit_test( test_unpack_uint32_le_unaligned ),
+		unit_test( test_unpack_uint64_be_aligned ),
+		unit_test( test_unpack_uint64_le_aligned ),
+		unit_test( test_unpack_uint32_be_byaligned ),
+		unit_test( test_unpack_uint32_le_byaligned ),
+		unit_test( test_unpack_uint32_be_unaligned ),
+		unit_test( test_unpack_uint32_le_unaligned ),
 	};
-	return cmocka_run_group_tests(tests, NULL, NULL);
+	return run_tests(tests);
 }
 
 static void test_unpack_uint64_be_aligned( void **state )
