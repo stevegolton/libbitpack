@@ -14,9 +14,18 @@ static void test_unpack_uint64_le_aligned( void **state );
 static void test_unpack_uint64_be_unaligned( void **state );
 static void test_unpack_uint64_le_unaligned( void **state );
 
+struct test
+{
+	uint64_t padding  : 3;
+	uint64_t element1 : 32;
+};
 
 int main(void)
 {
+	struct test teststruct = { 0, 0xBEEFFACE };
+	printf( "Printing a example of how a 32 bit field is packed using a C bit packed structure on your system:\n" );
+	print_array_raw( (uint8_t*)&teststruct, 8 );
+
 	const struct UnitTest tests[] =
 	{
 		unit_test( test_unpack_uint64_be_aligned ),
@@ -101,12 +110,12 @@ static void test_unpack_uint64_be_unaligned( void **state )
 
 static void test_unpack_uint64_le_unaligned( void **state )
 {
-	const uint8_t input[8] = { 0xE0,
-							   0xAC,
-							   0xFF,
-							   0xEE,
-							   0x0B,
-							   0x00,
+	const uint8_t input[8] = { 0x70,
+							   0xd6,
+							   0x7f,
+							   0xf7,
+							   0xfd,
+							   0x7f,
 							   0x00,
 							   0x00 };
 	const uint64_t expected = 0xBEEFFACE;
@@ -117,7 +126,7 @@ static void test_unpack_uint64_le_unaligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = unpack_uint64_le( input, sizeof( input ), 4, 32, &result );
+	int err = unpack_uint64_le( input, sizeof( input ), 3, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -128,7 +137,7 @@ void print_array_raw( const uint8_t *bytes, const int len )
 	int idx;
 	int bitoffset;
 
-	printf( "Raw test array:\n" );
+	//printf( "Raw test array:\n" );
 
 	for ( idx = 0; idx < len; idx++ )
 	{
