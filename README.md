@@ -1,6 +1,9 @@
 # libbitpack
 Architecture independent C library for packing and unpacking integers and floats of varying precision into and from arbitrary bit-wise locations within a byte array, supporting various types of byte and bit ordering.
 
+## Status
+[![Build Status](https://travis-ci.org/stevegolton/libbitpack.png)](https://travis-ci.org/stevegolton/libbitpack)
+
 Note: This library is in no way finished, the description here is more of a wishlist.
 
 Example use case: you have been given a device which talks in a weird binary protocol where values are packed tightly into bit fields in big endian byte order. After successfully connecting to the device you are receiving messages which end up in a byte array on your Intel (little endian) machine and you want to pluck out the values in a logical manner.
