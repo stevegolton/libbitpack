@@ -23,5 +23,7 @@ This library was originally designed for packing and parsing CAN messages to and
  - make && make test
 
 ## TODO
- - Write pretty much all the code!
- - Continuous integration
+ - Floating point values, float and double
+ - 8,16,32 bit precision integers
+ - See what gcc optimizes out by looking at the generated assembly
+ - Performance tests & improvements
