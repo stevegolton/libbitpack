@@ -48,7 +48,7 @@ Endanness  = be
  *
  * @param[in]	src				Source array.
  * @param[in]	len				Length of the source array in bytes.
- * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the least significant bit of the FIRST byte of the source array.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the LEAST significant bit of the FIRST byte of the source array.
  * @param[in]	width_bits		Width of the value in bits.
  * @param[out]	dest			Pointer to where to store the obtained value.
  *
@@ -66,7 +66,7 @@ int unpack_uint64_le( const uint8_t * const src,
  *
  * @param[in]	src				Source array.
  * @param[in]	len				Length of the source array in bytes.
- * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the least significant bit of the LAST byte of the source array.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the LEAST significant bit of the LAST byte of the source array.
  * @param[in]	width_bits		Width of the parameter in bits.
  * @param[out]	dest			Pointer to where to store the obtained value.
  *
@@ -78,19 +78,76 @@ int unpack_uint64_be( const uint8_t * const src,
 					  const size_t width_bits,
 					  uint64_t * dest );
 
-// Not supported
-#if 0
-int pack_uint64_le( const uint8_t * const src,
+/**
+ * Exactly the same as unpack_uint64_be() except the offset is expected from the
+ * most significant byte of the FIRST byte of the source array.
+ *
+ * @param[in]	src				Source array.
+ * @param[in]	len				Length of the source array in bytes.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the MOST significant bit of the FIRST byte of the source array.
+ * @param[in]	width_bits		Width of the parameter in bits.
+ * @param[out]	dest			Pointer to where to store the obtained value.
+ *
+ * @return		0 if successful, -1 on error.
+ */
+int unpack_uint64_be_rev( const uint8_t * const src,
+						  const size_t len,
+						  const size_t offset_bits,
+						  const size_t width_bits,
+						  uint64_t * dest );
+
+/**
+ * Packs a 64-bit unsigned integer into of an array of bytes stored in a big
+ * endian byte order.
+ *
+ * @param[in]	dest			Destination array.
+ * @param[in]	len				Length of the dest array in bytes.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the LEAST significant bit of the FIRST byte of the source array.
+ * @param[in]	width_bits		Width of the value in bits.
+ * @param[in]	src				The value to pack.
+ *
+ * @return		0 if successful, -1 on error.
+ */
+int pack_uint64_le( uint8_t * const dest,
 					const size_t len,
 					const size_t offset_bits,
 					const size_t width_bits,
 					const uint64_t src );
 
-int pack_uint64_be( const uint8_t * const src,
+/**
+ * Packs a 64-bit unsigned integer into of an array of bytes stored in a big
+ * endian byte order.
+ *
+ * @param[in]	dest			Destination array.
+ * @param[in]	len				Length of the dest array in bytes.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the LEAST significant bit of the LAST byte of the source array.
+ * @param[in]	width_bits		Width of the value in bits.
+ * @param[in]	src				The value to pack.most
+ *
+ * @return		0 if successful, -1 on error.
+ */
+int pack_uint64_be( uint8_t * const dest,
 					const size_t len,
 					const size_t offset_bits,
 					const size_t width_bits,
 					const uint64_t src );
-#endif
+
+/**
+ * Exactly the same as pack_uint64_be() except the offset is expected from the
+ * most significant byte of the FIRST byte of the source array.
+ *
+ * @param[in]	dest			Destination array.
+ * @param[in]	len				Length of the dest array in bytes.
+ * @param[in]	offset_bits		Offset in bits to the start of the value counting up from the MOST significant bit of the FIRST byte of the source array.
+ * @param[in]	width_bits		Width of the value in bits.
+ * @param[in]	src				The value to pack.
+ *
+ * @return		0 if successful, -1 on error.
+ */
+int pack_uint64_be_rev( uint8_t * const dest,
+						const size_t len,
+						const size_t offset_bits,
+						const size_t width_bits,
+						const uint64_t src );
 
 #endif
