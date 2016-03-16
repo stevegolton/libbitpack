@@ -6,7 +6,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "bit_twiddle.h"
+#include "bit_pack.h"
 
 void print_array_raw( const uint8_t *bytes, int len );
 static void test_unpack_uint64_be_aligned( void **state );
@@ -42,7 +42,7 @@ static void test_unpack_uint64_be_aligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 0, 64, eByteOrder_MSBFirst, &result );
+	int err = unpack_uint64_be( input, 8, 0, 64, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -59,7 +59,7 @@ static void test_unpack_uint64_le_aligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 0, 64, eByteOrder_LSBFirst, &result );
+	int err = unpack_uint64_le( input, 8, 0, 64, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -76,7 +76,7 @@ static void test_unpack_uint32_be_byaligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 8, 32, eByteOrder_MSBFirst, &result );
+	int err = unpack_uint64_be( input, 8, 8, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -93,7 +93,7 @@ static void test_unpack_uint32_le_byaligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 8, 32, eByteOrder_LSBFirst, &result );
+	int err = unpack_uint64_le( input, 8, 8, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -117,7 +117,7 @@ static void test_unpack_uint32_be_unaligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 9, 32, eByteOrder_MSBFirst, &result );
+	int err = unpack_uint64_be( input, 8, 9, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -141,7 +141,7 @@ static void test_unpack_uint32_le_unaligned( void **state )
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = UnpackUint64( input, 12, 32, eByteOrder_LSBFirst, &result );
+	int err = unpack_uint64_le( input, 8, 12, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
@@ -169,9 +169,3 @@ void print_array_raw( const uint8_t *bytes, const int len )
 
 
 }
-
-
-
-
-
-

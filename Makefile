@@ -5,7 +5,7 @@ CFLAGS = -c -g3 -O3 -time
 WARNINGS =
 LDFLAGS =
 LIBRARIES = -lcmocka
-SOURCES = main.c bit_twiddle.c
+SOURCES = main.c bit_pack.c
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = testme.out
 
