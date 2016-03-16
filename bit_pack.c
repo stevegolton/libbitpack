@@ -66,3 +66,16 @@ int unpack_uint64_be( const uint8_t * const src,
 
 	return 0;
 }
+
+int unpack_uint64_be_rev( const uint8_t * const src,
+						  const size_t len,
+						  const size_t offset_bits,
+						  const size_t width_bits,
+						  uint64_t * dest )
+{
+	size_t offset_bits_from_start = ( ( len * 8 ) - offset_bits ) - width_bits;
+
+	printf( "New offset = %d\n", offset_bits_from_start );
+
+	return unpack_uint64_be( src, len, offset_bits_from_start, width_bits, dest );
+}

@@ -96,13 +96,20 @@ static void test_unpack_uint64_be_unaligned( void **state )
 							   0x00 };
 	const uint64_t expected = 0xBEEFFACE;
 	uint64_t result;
+	int err;
 
 	(void) state; /* unused */
 
 	print_array_raw( input, 8 );
 
 	/* Unpack that big word we just wrote in */
-	int err = unpack_uint64_be( input, sizeof( input ), 20, 32, &result );
+	err = unpack_uint64_be( input, sizeof( input ), 20, 32, &result );
+
+	assert_int_equal( 0, err );
+	assert_int_equal( expected, result );
+
+	/* Unpack that big word we just wrote in */
+	err = unpack_uint64_be_rev( input, sizeof( input ), 12, 32, &result );
 
 	assert_int_equal( 0, err );
 	assert_int_equal( expected, result );
