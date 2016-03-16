@@ -9,8 +9,8 @@ How it works:
  - The library contains a set of functions which can be used to pick out various size integers and floats from a given byte array.
  - Each function notably takes a pointer to a byte array, a bit offset and a bit length of the value in question as well as byte ordering information.
  - The passed buffer is treated as a large arbitrary precision integer which means bit offsets larger than 64 can be used.
- - For Motorola (big endian) byte order, the bit offset is counted starting at the LSbit of the first byte in the array, counting forward through the bytes.
- - For Intel (little endian) byte order, the bit offset is counted starting at the LSbit of the last byte in the array, counting backward through the bytes.
+ - For Motorola (big endian) byte order, the bit offset is counted starting at the LSbit of the last byte in the array, counting forward through the bytes.
+ - For Intel (little endian) byte order, the bit offset is counted starting at the LSbit of the first byte in the array, counting backward through the bytes.
 
 ## Reasoning
 This library was originally designed for packing and parsing CAN messages to and from weird automotive devices. It's not meant to be fast or efficient, just flexible.
