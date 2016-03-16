@@ -101,7 +101,14 @@ static void test_unpack_uint32_le_byaligned( void **state )
 
 static void test_unpack_uint32_be_unaligned( void **state )
 {
-	const uint8_t input[8] = { 0x00, 0x02, 0x46, 0x8A, 0xCE, 0x10, 0x00, 0x00 };
+	const uint8_t input[8] = { 0x00,
+							   0x02,
+							   0x46,
+							   0x8A,
+							   0xCE,
+							   0x10,
+							   0x00,
+							   0x00 };
 	const uint64_t expected = 0x01234567;
 	uint64_t result;
 
@@ -118,8 +125,15 @@ static void test_unpack_uint32_be_unaligned( void **state )
 
 static void test_unpack_uint32_le_unaligned( void **state )
 {
-	const uint8_t input[8] = { 0xFF, 0x7F, 0x56, 0x34, 0x12, 0xF0, 0xFF, 0xFF };
-	const uint64_t expected = 0x01234567;
+	const uint8_t input[8] = { 0x00,
+							   0x00,
+							   0x00,
+							   0x00,
+							   0x00,
+							   0x00,
+							   0xEF,
+							   0xBE };
+	const uint64_t expected = 0xBEEF;
 	uint64_t result;
 
 	(void) state; /* unused */

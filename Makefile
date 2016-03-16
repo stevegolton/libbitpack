@@ -9,10 +9,11 @@ SOURCES = main.c bit_twiddle.c
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = testme
 
-test: all
-	LD_LIBRARY_PATH=/usr/local/lib ./test
 
 all: $(SOURCES) $(EXECUTABLE)
+
+test: all
+	./testme
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@ $(LIBRARIES)
